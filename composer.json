@@ -1,0 +1,24 @@
+{
+    "name": "timble-one/backend-bundle",
+    "description": "utils for symfony backends",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "TimbleOne\\BackendBundle\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Timo Bühlmann",
+            "email": "71m024@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/http-kernel": "^7.2",
+        "symfony/config": "^7.2",
+        "symfony/dependency-injection": "^7.2",
+        "imagine/imagine": "^1.5",
+        "ext-gd": "*"
+    }
+}
