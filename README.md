@@ -39,17 +39,3 @@ return [
     <vendor>\<bundle-name>\<bundle-long-name>::class => ['all' => true],
 ];
 ```
-
-### Configuration
-This is an example configuration:
-
-```yaml
-# config/packages/backend.yml
-
-backend:
-    resized_image_provider:
-        max_heights: [50, 100, 150, 200]
-        media_object_class: 'App\Entity\MediaObject'
-```
-
-Your MediaObject must implement the `TimbleOne\BackendBundle\MediaObject` interface.

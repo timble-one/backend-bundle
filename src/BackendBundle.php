@@ -19,6 +19,9 @@ class BackendBundle extends AbstractBundle
                         ->arrayNode('max_heights')
                             ->integerPrototype()->end()
                         ->end()
+                        ->arrayNode('max_widths')
+                            ->integerPrototype()->end()
+                        ->end()
                         ->stringNode('media_object_class')->end()
                     ->end()
                 ->end() // resized_image_provider
@@ -31,11 +34,13 @@ class BackendBundle extends AbstractBundle
         $resizedImageProvider = $config['resized_image_provider'];
         if ($resizedImageProvider) {
             $maxHeights = $resizedImageProvider['max_heights'];
+            $maxWidths = $resizedImageProvider['max_widths'];
             $mediaObjectClass = $resizedImageProvider['media_object_class'];
-            if ($maxHeights && $mediaObjectClass) {
+            if (($maxHeights || $maxWidths) && $mediaObjectClass) {
                 $container->services()
                     ->set(ImageResizeListener::class)
                     ->bind('$maxHeights', $maxHeights)
+                    ->bind('$maxWidths', $maxWidths)
                     ->tag('doctrine.orm.entity_listener', ['event' => 'postPersist', 'entity' => $mediaObjectClass])
                 ;
             }
