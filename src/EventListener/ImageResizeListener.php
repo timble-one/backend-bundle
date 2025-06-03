@@ -49,7 +49,13 @@ class ImageResizeListener
         $ratio = $width / $height;
         $newHeight = min($maxHeight, $height);
         $newWidth = $newHeight * $ratio;
-        $this->createSpecificSizeCopy($mediaObject, $newHeight, $newWidth, $newHeight, 'mh');
+        $this->createSpecificSizeCopy(
+            $mediaObject,
+            $newHeight,
+            $newWidth,
+            $maxHeight,
+            'mh'
+        );
     }
 
     private function createSpecificWidthCopy(MediaObject $mediaObject, $maxWidth): void
@@ -59,7 +65,13 @@ class ImageResizeListener
         $ratio = $height / $width;
         $newWidth = min($maxWidth, $width);
         $newHeight = $newWidth * $ratio;
-        $this->createSpecificSizeCopy($mediaObject, $newHeight, $newWidth, $newWidth, 'mw');
+        $this->createSpecificSizeCopy(
+            $mediaObject,
+            $newHeight,
+            $newWidth,
+            $maxWidth,
+            'mw'
+        );
     }
 
     private function createSpecificSizeCopy(
