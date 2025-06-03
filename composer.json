@@ -15,6 +15,11 @@
             "email": "71m024@gmail.com"
         }
     ],
+    "config": {
+        "platform": {
+            "php": "8.3.0"
+        }
+    },
     "require": {
         "symfony/http-kernel": "^7.2",
         "symfony/config": "^7.2",
