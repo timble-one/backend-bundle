@@ -31,10 +31,10 @@ class BackendBundle extends AbstractBundle
 
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        $resizedImageProvider = $config['resized_image_provider'];
-        $maxHeights = ($resizedImageProvider ?? [])['max_heights'];
-        $maxWidths = ($resizedImageProvider ?? [])['max_widths'];
-        $mediaObjectClass = ($resizedImageProvider ?? [])['media_object_class'];
+        $resizedImageProvider = $config['resized_image_provider'] ?? null;
+        $maxHeights = ($resizedImageProvider ?? [])['max_heights'] ?? null;
+        $maxWidths = ($resizedImageProvider ?? [])['max_widths'] ?? null;
+        $mediaObjectClass = ($resizedImageProvider ?? [])['media_object_class'] ?? null;
 
         $container->parameters()
             ->set('timble_one.backend_bundle.max_heights', $maxHeights ?? [])
