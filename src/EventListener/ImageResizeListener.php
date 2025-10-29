@@ -2,94 +2,32 @@
 
 namespace TimbleOne\BackendBundle\EventListener;
 
-use Imagine\Gd\Imagine;
-use Imagine\Image\Box;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use TimbleOne\BackendBundle\Manager\ImageResizingManager;
 use TimbleOne\BackendBundle\MediaObject;
 
 class ImageResizeListener
 {
-    private Imagine $imagine;
-
-    /**
-     * @var int[]
-     */
-    private array $maxHeights;
-
-    /**
-     * @var int[]
-     */
-    private array $maxWidths;
-
     /**
      * @param int[] $maxHeights
      * @param int[] $maxWidths
      */
-    public function __construct(array $maxHeights, array $maxWidths)
-    {
-        $this->imagine = new Imagine();
-        $this->maxHeights = $maxHeights;
-        $this->maxWidths = $maxWidths;
-    }
+    public function __construct(
+        #[Autowire('%timble_one.backend_bundle.max_heights%')]
+        private array $maxHeights,
+        #[Autowire('%timble_one.backend_bundle.max_widths%')]
+        private array  $maxWidths,
+        private ImageResizingManager $imageManager,
+    ) {}
 
     public function postPersist(object $mediaObject): void
     {
         assert($mediaObject instanceof MediaObject);
         foreach ($this->maxHeights as $maxSize) {
-            $this->createSpecificHeightCopy($mediaObject, $maxSize);
+            $this->imageManager->createSpecificHeightCopy($mediaObject->getFile()->getPathname(), $maxSize);
         }
         foreach ($this->maxWidths as $maxSize) {
-            $this->createSpecificWidthCopy($mediaObject, $maxSize);
+            $this->imageManager->createSpecificWidthCopy($mediaObject->getFile()->getPathname(), $maxSize);
         }
-    }
-
-    private function createSpecificHeightCopy(MediaObject $mediaObject, $maxHeight): void
-    {
-        $pathname = $mediaObject->getFile()->getPathname();
-        [$width, $height] = getimagesize($pathname);
-        $ratio = $width / $height;
-        $newHeight = min($maxHeight, $height);
-        $newWidth = $newHeight * $ratio;
-        $this->createSpecificSizeCopy(
-            $mediaObject,
-            $newHeight,
-            $newWidth,
-            $maxHeight,
-            'mh'
-        );
-    }
-
-    private function createSpecificWidthCopy(MediaObject $mediaObject, $maxWidth): void
-    {
-        $pathname = $mediaObject->getFile()->getPathname();
-        [$width, $height] = getimagesize($pathname);
-        $ratio = $height / $width;
-        $newWidth = min($maxWidth, $width);
-        $newHeight = $newWidth * $ratio;
-        $this->createSpecificSizeCopy(
-            $mediaObject,
-            $newHeight,
-            $newWidth,
-            $maxWidth,
-            'mw'
-        );
-    }
-
-    private function createSpecificSizeCopy(
-        MediaObject $mediaObject, int $height, int $width, int $limitingSize, string $sizePrefix
-    ): void {
-        $pathname = $mediaObject->getFile()->getPathname();
-        $image = $this->imagine->open($pathname);
-        $pathnameSegments = explode('.', $pathname);
-        $withoutExtension = array_splice($pathnameSegments, 0, count($pathnameSegments) - 1);
-        $image
-            ->resize(new Box($width, $height))
-            ->save(sprintf(
-                "%s-%s%s.%s",
-                join('.', $withoutExtension),               // pathname without extension
-                $sizePrefix,
-                $limitingSize,
-                $mediaObject->getFile()->getExtension(),    // file extension
-            ))
-        ;
     }
 }

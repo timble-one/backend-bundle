@@ -32,18 +32,23 @@ class BackendBundle extends AbstractBundle
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         $resizedImageProvider = $config['resized_image_provider'];
-        if ($resizedImageProvider) {
-            $maxHeights = $resizedImageProvider['max_heights'];
-            $maxWidths = $resizedImageProvider['max_widths'];
-            $mediaObjectClass = $resizedImageProvider['media_object_class'];
-            if (($maxHeights || $maxWidths) && $mediaObjectClass) {
-                $container->services()
-                    ->set(ImageResizeListener::class)
-                    ->bind('$maxHeights', $maxHeights)
-                    ->bind('$maxWidths', $maxWidths)
-                    ->tag('doctrine.orm.entity_listener', ['event' => 'postPersist', 'entity' => $mediaObjectClass])
-                ;
-            }
+        $maxHeights = ($resizedImageProvider ?? [])['max_heights'];
+        $maxWidths = ($resizedImageProvider ?? [])['max_widths'];
+        $mediaObjectClass = ($resizedImageProvider ?? [])['media_object_class'];
+
+        $container->parameters()
+            ->set('timble_one.backend_bundle.max_heights', $maxHeights ?? [])
+            ->set('timble_one.backend_bundle.max_widths', $maxWidths ?? [])
+        ;
+
+        $container->import('../config/services.yaml');
+
+        if (($maxHeights || $maxWidths) && $mediaObjectClass) {
+            $container->services()
+                ->set(ImageResizeListener::class)
+                ->autowire()
+                ->tag('doctrine.orm.entity_listener', ['event' => 'postPersist', 'entity' => $mediaObjectClass])
+            ;
         }
     }
 }

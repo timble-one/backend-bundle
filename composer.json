@@ -1,6 +1,6 @@
 {
     "name": "timble-one/backend-bundle",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "utils for symfony backends",
     "type": "symfony-bundle",
     "license": "MIT",
@@ -25,6 +25,7 @@
         "symfony/config": "^7.2",
         "symfony/dependency-injection": "^7.2",
         "imagine/imagine": "^1.5",
-        "ext-gd": "*"
+        "ext-gd": "*",
+        "symfony/console": "^7.2"
     }
 }
