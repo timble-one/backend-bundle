@@ -43,7 +43,7 @@ class ImageManager
             if (!file_exists($sizeFile)) {
                 $output->writeln("create: $sizeFile");
                 [$width, $height] = ImageSizeCalculator::size($absoluteFile, $size, $sizePrefix);
-                $this->resizingManager->createSpecificSizeCopy($absoluteFile, $width, $height, $size, $sizePrefix);
+                $this->resizingManager->createSpecificSizeCopy($absoluteFile, $height, $width, $size, $sizePrefix);
             }
         }
     }
