@@ -6,7 +6,7 @@ use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
-use TimbleOne\BackendBundle\EventListener\ImageResizeListener;
+use TimbleOne\BackendBundle\EventListener\ImageResizing\ImageResizingListener;
 
 class BackendBundle extends AbstractBundle
 {
@@ -45,7 +45,7 @@ class BackendBundle extends AbstractBundle
 
         if (($maxHeights || $maxWidths) && $mediaObjectClass) {
             $container->services()
-                ->set(ImageResizeListener::class)
+                ->set(ImageResizingListener::class)
                 ->autowire()
                 ->tag('doctrine.orm.entity_listener', ['event' => 'postPersist', 'entity' => $mediaObjectClass])
             ;

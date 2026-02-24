@@ -4,14 +4,15 @@ namespace TimbleOne\BackendBundle\Command\Image;
 
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use TimbleOne\BackendBundle\Manager\ImageResizingManager;
+use TimbleOne\BackendBundle\Service\ImageResizer;
+use TimbleOne\BackendBundle\Service\ImageSizeCalculator;
 
 class ImageManager
 {
     public function __construct(
         #[Autowire('%kernel.project_dir%/public/media')]
         private string $mediaFolder,
-        private ImageResizingManager $resizingManager,
+        private ImageResizer $resizingManager,
     ) {}
 
     /**
@@ -41,10 +42,8 @@ class ImageManager
             $sizeFile = "$this->mediaFolder/$imageName-$sizePrefix$size.$extension";
             if (!file_exists($sizeFile)) {
                 $output->writeln("create: $sizeFile");
-                $this->resizingManager->createSpecificHeightCopy(
-                    $absoluteFile,
-                    $size,
-                );
+                [$width, $height] = ImageSizeCalculator::size($absoluteFile, $size, $sizePrefix);
+                $this->resizingManager->createSpecificSizeCopy($absoluteFile, $width, $height, $size, $sizePrefix);
             }
         }
     }
