@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8938444981002e629d5a95125ea70c7c",
+    "content-hash": "6d835ad3692f4c89c2472003a758e054",
     "packages": [
         {
             "name": "api-platform/json-schema",
@@ -3715,7 +3715,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "ext-gd": "*"
+        "ext-gd": "*",
+        "ext-exif": "*"
     },
     "platform-dev": {},
     "platform-overrides": {
